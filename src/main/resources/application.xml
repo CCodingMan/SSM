@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="    
+           http://www.springframework.org/schema/beans    
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
+           http://www.springframework.org/schema/aop    
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
+           http://www.springframework.org/schema/context    
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+           
+    <!-- 自动扫描注解的bean -->  
+    <context:component-scan base-package="com.ljj.service" /> 
+    
+    <!-- 引入jdbc配置文件:方法一 -->
+    <!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+        <list>
+          <value>classpath:jdbc.properties</value>
+        </list>
+      </property>
+    </bean>  -->
+    
+    <!-- 引入jdbc配置文件:方法二 -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    
+    <!-- 配置数据源：方案一 -->
+    <!-- <bean id="dataSource"  
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+        不使用properties来配置  
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />   
+            <property name="url" value="jdbc:mysql://localhost:3306/test" />   
+            <property name="username" value="root" />   
+            <property name="password" value="mysql" />  
+       使用properties来配置  
+        <property name="driverClassName">  
+            <value>${jdbc_driverClassName}</value>  
+        </property>  
+        <property name="url">  
+            <value>${jdbc_url}</value>  
+        </property>  
+        <property name="username">  
+            <value>${jdbc_username}</value>  
+        </property>  
+        <property name="password">  
+            <value>${jdbc_password}</value>  
+        </property>  
+    </bean> -->
+    
+    <!-- 配置数据源：方案二 -->  
+     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+        init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc_driver}" />
+        <property name="url" value="${jdbc_url}" />
+        <property name="username" value="${jdbc_username}" />
+        <property name="password" value="${jdbc_password}" />
+
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="10" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="10" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+            value="33" />
+        <!-- 用来检测有效sql -->
+        <property name="validationQuery" value="select 1 from dual;" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="testWhileIdle" value="true" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000" />
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true" />
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="1800" />
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true" />
+        <!-- 监控数据库 -->
+        <property name="filters" value="mergeStat" />
+    </bean>
+    
+     <!-- 自动扫描了所有的XxxxMapper.xml对应的mapper接口文件，这样就不用一个一个手动配置Mpper的映射了，只要Mapper接口类和Mapper映射文件对应起来就可以了。 -->  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="basePackage"  
+            value="com.ljj.dao" />  
+    </bean>
+    
+    <!-- 配置Mybatis的文件 ，mapperLocations配置**Mapper.xml文件位置，configLocation配置mybatis-config文件位置-->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <property name="mapperLocations" value="classpath*:com/ljj/mapper/**/*.xml"/>    
+        <property name="configLocation" value="classpath:mybatis-config.xml" />  
+    </bean>
+    
+</beans>
