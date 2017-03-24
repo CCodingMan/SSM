@@ -14,8 +14,82 @@
     
     <!-- 扫描controller（controller层注入） -->  
     <context:component-scan base-package="com.ljj.controller"/>    
-       
+    
+    <!--RequestMappingHandlerAdapter 返回映射处理适配器-->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<ref bean="stringHttpMessageConverter" />
+			<ref bean="marshallingHttpMessageConverter" />
+			<ref bean="mappingJackson2HttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!--解决Spring MVC返回字符串自动加"引号"和 中文乱码 -->
+	<bean id="stringHttpMessageConverter"
+		class="org.springframework.http.converter.StringHttpMessageConverter">
+		<constructor-arg value="UTF-8" />
+	</bean>
+
+	<bean id="marshallingHttpMessageConverter"
+		class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+	</bean>
+
+	<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+	<bean id="mappingJackson2HttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json</value>
+				<value>application/xml</value>
+				<value>text/html</value>
+				<value>text/plain</value>
+				<value>text/xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- bean 转xml -->
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller" />
+	
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
+	<!--内容协商 -->
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="contentNegotiationManager">
+			<bean
+				class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+				<property name="defaultContentType" value="text/html" />
+				<property name="mediaTypes">
+					<map>
+						<entry key="json" value="application/json" />
+						<entry key="xml" value="application/xml" />
+						<entry key="html" value="text/html" />
+					</map>
+				</property>
+			</bean>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix" value="/WEB-INF/jsp/" />  <!-- 前缀 -->
+					<property name="suffix" value=".jsp" />				<!-- 后缀 -->
+				</bean>
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<property name="marshaller" ref="castorMarshaller" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	   
     <!-- 对模型视图添加前后缀 -->  
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"  
-      p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>    
+     <!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"  
+      p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>    --> 
 </beans>    
