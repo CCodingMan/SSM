@@ -1,5 +1,7 @@
 package com.ljj.service;
 
+import java.util.List;
+
 import com.ljj.model.User;
 
 /**
@@ -10,4 +12,6 @@ import com.ljj.model.User;
 */
 public interface IUserService {
 	User selectUserById(Integer userId);
+	
+	List<User> selectAll();
 }

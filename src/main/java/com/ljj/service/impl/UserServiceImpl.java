@@ -1,5 +1,7 @@
 package com.ljj.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,10 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public User selectUserById(Integer userId) {
 		return userDao.selectUserById(userId);
+	}
+	
+	public List<User> selectAll() {
+		return userDao.selectAll();
 	}
     
 }

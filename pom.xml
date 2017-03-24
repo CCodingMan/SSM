@@ -64,7 +64,54 @@
             <groupId>org.springframework</groupId>  
             <artifactId>spring-web</artifactId>  
             <version>${spring.version}</version>  
-        </dependency>  
+        </dependency>
+        <!-- spring-orm：对象关系映射，集成orm框架-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>  
+		</dependency>
+        <!-- spring-oxm：对象xml映射 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>  
+		</dependency>
+		
+		<!--spring-oxm依赖-->
+        <dependency>
+            <groupId>org.codehaus.castor</groupId>
+            <artifactId>castor-xml</artifactId>
+            <version>1.3.3</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>commons-lang</artifactId>
+            		<groupId>commons-lang</groupId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- spring mvc json -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-core</artifactId>
+    		<version>2.8.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.8.5</version>
+		</dependency>  
   
         <!--单元测试依赖 -->  
         <dependency>  
@@ -150,6 +197,20 @@
 		    <artifactId>javaee-web-api</artifactId>  
 		    <version>7.0</version>  
 		    <scope>provided</scope>  
+		</dependency>
+		
+		<!--通用Mapper-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>3.3.8</version>
+        </dependency>
+        
+        <!-- mybaits 分页插件 -->
+		<dependency>
+    		<groupId>com.github.pagehelper</groupId>
+    		<artifactId>pagehelper</artifactId>
+    		<version>4.1.6</version>
 		</dependency> 
 		
     </dependencies>  

@@ -2,13 +2,17 @@ package com.ljj.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ljj.model.User;
@@ -38,5 +42,12 @@ public class UserController {
 	  User user =  userService.selectUserById(userId);
 	  request.setAttribute("user", user);
 	  return "index";
+  }
+  
+  @RequestMapping(value = "/All")
+  @ResponseBody
+  public Object getAll(){
+	  List<User> userList =  userService.selectAll();
+	  return userList;
   }
 }

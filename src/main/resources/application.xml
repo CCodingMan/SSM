@@ -87,16 +87,60 @@
     </bean>
     
      <!-- 自动扫描了所有的XxxxMapper.xml对应的mapper接口文件，这样就不用一个一个手动配置Mpper的映射了，只要Mapper接口类和Mapper映射文件对应起来就可以了。 -->  
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+    <!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
         <property name="basePackage"  
             value="com.ljj.dao" />  
-    </bean>
+    </bean> -->
     
     <!-- 配置Mybatis的文件 ，mapperLocations配置**Mapper.xml文件位置，configLocation配置mybatis-config文件位置-->  
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+    <!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />  
         <property name="mapperLocations" value="classpath*:com/ljj/mapper/**/*.xml"/>    
         <property name="configLocation" value="classpath:mybatis-config.xml" />  
+    </bean> -->
+    
+    <!-- myBatis 使用 分页插件，通用插件 配置 开始 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+		<property name="mapperLocations" value="classpath*:com/ljj/mapper/**/*.xml" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />  
+		<!-- mybatis 分页插件 -->
+		<property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                            reasonable=true
+                            offsetAsPageNum=true
+                            rowBoundsWithCount=true
+                            pageSizeZero=true
+                            <!-- supportMethodsArguments=true
+                            params=count=countSql
+                            autoRuntimeDialect=true -->
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+	</bean>
+	
+	<!--  通用mapper 插件 -->
+	<bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ljj.dao"/>
+        <!-- 通用Mapper通过属性注入进行配置，默认不配置时会注册Mapper<T>接口  -->
+        <property name="properties">
+            <value>
+                mappers=tk.mybatis.mapper.common.Mapper
+                <!-- mappers=newb.c.backend.service.common.MyMapper -->
+            </value>
+        </property>
+    </bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
     
 </beans>
