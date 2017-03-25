@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.ljj.dao.IUserDao;
 import com.ljj.model.User;
 import com.ljj.service.IUserService;
@@ -27,6 +28,11 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	public List<User> selectAll() {
+		return userDao.selectAll();
+	}
+	
+	public List<User> selectPage(Integer pageNum,Integer pageSize) {
+		PageHelper.startPage(pageNum, pageSize);
 		return userDao.selectAll();
 	}
     

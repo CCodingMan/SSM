@@ -14,4 +14,6 @@ public interface IUserService {
 	User selectUserById(Integer userId);
 	
 	List<User> selectAll();
+	
+	List<User> selectPage(Integer pageNum,Integer pageSize);
 }

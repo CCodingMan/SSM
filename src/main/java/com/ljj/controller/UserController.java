@@ -50,4 +50,11 @@ public class UserController {
 	  List<User> userList =  userService.selectAll();
 	  return userList;
   }
+  
+  @RequestMapping(value = "/Page")
+  @ResponseBody
+  public Object getPage(){
+	  List<User> userList =  userService.selectPage(1,10);
+	  return userList;
+  }
 }
